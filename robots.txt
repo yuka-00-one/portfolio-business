@@ -1,0 +1,7 @@
+# 検索エンジン対策について:
+# 各ページの <meta name="robots" content="noindex"> が検索結果への掲載を防ぐ本体。
+# noindex をクローラーに読んでもらう必要があるため、ここでは巡回自体は禁止しない。
+# （Disallow: / にすると noindex が読まれず、URLだけが検索結果に残ることがある）
+
+User-agent: *
+Allow: /
