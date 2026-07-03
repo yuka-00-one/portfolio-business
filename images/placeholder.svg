@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#eff6ff"/>
+  <rect x="245" y="128" width="150" height="94" rx="10" fill="none" stroke="#93c5fd" stroke-width="4"/>
+  <circle cx="292" cy="164" r="14" fill="#93c5fd"/>
+  <path d="M263 204 L308 168 L336 192 L356 176 L378 204 Z" fill="#93c5fd"/>
+  <text x="320" y="262" font-family="sans-serif" font-size="20" fill="#64748b" text-anchor="middle">スクリーンショット準備中</text>
+</svg>

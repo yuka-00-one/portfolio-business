@@ -1,0 +1,376 @@
+/* ========================================
+   はなさかわんわん - スタイルシート
+   水彩画風・幼児向けひらがな練習ゲーム
+   ======================================== */
+
+:root {
+    /* 空と背景 */
+    --sky-top: #e8f4fc;
+    --sky-bottom: #fef9e7;
+
+    /* 自然の色（水彩風にやわらかく） */
+    --grass-light: #a8d5a2;
+    --earth-warm: #d4a574;
+
+    /* 花の色 */
+    --flower-pink: #ffb7c5;
+    --flower-glow: rgba(255, 223, 186, 0.8);
+
+    /* 文字書きUI */
+    --ink-color: #4a5568;
+    --guide-glow: rgba(255, 200, 100, 0.9);
+
+    /* Safe Area余白 */
+    --safe-area-left: max(44px, env(safe-area-inset-left));
+    --safe-area-right: max(44px, env(safe-area-inset-right));
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    touch-action: none;
+    font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDGothic', 'Yu Gothic', sans-serif;
+}
+
+/* 横長固定のコンテナ */
+#game-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+}
+
+/* Safe Area対応ラッパー */
+#safe-area-wrapper {
+    position: relative;
+    width: calc(100% - var(--safe-area-left) - var(--safe-area-right));
+    height: calc(100% - var(--safe-area-top) - var(--safe-area-bottom));
+    margin: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left);
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+/* メインゲームCanvas */
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* 文字書き用Canvas（オーバーレイ） */
+#writing-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#writing-canvas.active {
+    pointer-events: auto;
+    opacity: 1;
+}
+
+/* ========================================
+   HUD
+   ======================================== */
+#hud {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+#hud.hidden {
+    opacity: 0;
+}
+
+#home-button {
+    pointer-events: auto;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 251, 244, 0.85);
+    box-shadow: 0 2px 8px rgba(80, 60, 40, 0.2);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+#hud-stage-label {
+    background: rgba(255, 251, 244, 0.85);
+    border-radius: 22px;
+    padding: 8px 18px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #8a6d4f;
+    box-shadow: 0 2px 8px rgba(80, 60, 40, 0.15);
+}
+
+#hud-chars {
+    display: flex;
+    gap: 6px;
+}
+
+.hud-char {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 251, 244, 0.6);
+    color: #b3a18c;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 1px 4px rgba(80, 60, 40, 0.12);
+    transition: all 0.4s ease;
+}
+
+.hud-char.done {
+    background: var(--flower-pink);
+    color: #fff;
+    transform: scale(1.08);
+    box-shadow: 0 0 10px rgba(255, 183, 197, 0.8);
+}
+
+/* ヒントメッセージ */
+#hint-label {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    z-index: 11;
+    background: rgba(255, 251, 244, 0.92);
+    color: #8a6d4f;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 700;
+    padding: 10px 26px;
+    border-radius: 30px;
+    box-shadow: 0 3px 12px rgba(80, 60, 40, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#hint-label.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ========================================
+   タイトル画面
+   ======================================== */
+#title-screen {
+    position: fixed;
+    inset: 0;
+    background: url('assets/backgrounds/title.png') center center / cover no-repeat;
+    background-color: #ffecd2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 7%;
+    z-index: 2000;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#title-screen.hidden {
+    opacity: 0;
+    transform: scale(1.08);
+    pointer-events: none;
+}
+
+.title-content {
+    text-align: center;
+}
+
+.game-title {
+    font-size: clamp(2rem, 7vw, 3.6rem);
+    font-weight: 700;
+    color: #fff;
+    text-shadow:
+        3px 3px 0 #f97316,
+        -1px -1px 0 #f97316,
+        1px -1px 0 #f97316,
+        -1px 1px 0 #f97316,
+        0 6px 18px rgba(0, 0, 0, 0.25);
+    margin-bottom: 0.4rem;
+    animation: titleBounce 2s ease-in-out infinite;
+}
+
+.title-subtitle {
+    font-size: clamp(0.9rem, 2.6vw, 1.3rem);
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1.4rem;
+    font-weight: 600;
+}
+
+#start-button {
+    background: linear-gradient(135deg, #ff9a9e 0%, #f6416c 100%);
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 3rem;
+    font-size: clamp(1.1rem, 3.6vw, 1.6rem);
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    box-shadow:
+        0 4px 15px rgba(246, 65, 108, 0.4),
+        0 8px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    animation: buttonPulse 2s ease-in-out infinite;
+}
+
+#start-button:hover,
+#start-button:active {
+    transform: scale(1.08);
+}
+
+/* ========================================
+   ステージ選択画面
+   ======================================== */
+#stage-select {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 183, 197, 0.35), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(212, 165, 255, 0.3), transparent 50%),
+        linear-gradient(180deg, #fdf6ec 0%, #f7e8d5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4vh;
+    padding: 4vh 6vw;
+    transition: opacity 0.6s ease;
+}
+
+#stage-select.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.select-title {
+    font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+    color: #8a6d4f;
+    font-weight: 700;
+    text-shadow: 0 2px 6px rgba(255, 255, 255, 0.8);
+}
+
+#stage-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(80px, 130px));
+    gap: clamp(10px, 2vw, 22px);
+    justify-content: center;
+}
+
+.stage-button {
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 14px rgba(150, 110, 80, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stage-button:hover,
+.stage-button:active {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 22px rgba(150, 110, 80, 0.3);
+}
+
+.stage-button.locked {
+    opacity: 0.45;
+    cursor: default;
+    filter: grayscale(0.7);
+}
+
+.stage-button.locked:hover {
+    transform: none;
+    box-shadow: 0 4px 14px rgba(150, 110, 80, 0.18);
+}
+
+.stage-flower {
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
+}
+
+.stage-label {
+    font-size: clamp(0.85rem, 2.4vw, 1.2rem);
+    font-weight: 700;
+    color: #8a6d4f;
+}
+
+/* ========================================
+   アニメーション
+   ======================================== */
+@keyframes titleBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes buttonPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(246, 65, 108, 0.4), 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(246, 65, 108, 0.65), 0 8px 40px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* 小さい画面用の調整 */
+@media (max-height: 420px) {
+    :root {
+        --safe-area-left: max(30px, env(safe-area-inset-left));
+        --safe-area-right: max(30px, env(safe-area-inset-right));
+    }
+
+    #stage-grid {
+        grid-template-columns: repeat(5, minmax(64px, 96px));
+    }
+}

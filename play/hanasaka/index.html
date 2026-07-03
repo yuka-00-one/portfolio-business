@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="screen-orientation" content="landscape">
+    <title>はなさかわんわん</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- タイトル画面 -->
+    <div id="title-screen">
+        <div class="title-content">
+            <p class="title-subtitle">ひらがなを かいて おはなを さかせよう</p>
+            <button id="start-button">
+                <span>タップして はじめる</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ステージ選択画面 -->
+    <div id="stage-select" class="hidden">
+        <h2 class="select-title">どの もじで あそぶ？</h2>
+        <div id="stage-grid"></div>
+    </div>
+
+    <div id="game-container">
+        <!-- Safe Area対応のゲームラッパー -->
+        <div id="safe-area-wrapper">
+            <canvas id="game-canvas"></canvas>
+            <!-- 文字書きオーバーレイ -->
+            <canvas id="writing-canvas"></canvas>
+            <!-- HUD -->
+            <div id="hud" class="hidden">
+                <button id="home-button">🏠</button>
+                <div id="hud-stage-label"></div>
+                <div id="hud-chars"></div>
+            </div>
+
+            <!-- ヒントメッセージ -->
+            <div id="hint-label"></div>
+        </div>
+    </div>
+
+    <!-- ?v= はキャッシュ対策。JSを更新したら数字を上げる -->
+    <script src="audio.js?v=2"></script>
+    <script src="sprites.js?v=2"></script>
+    <script src="characters.js?v=3"></script>
+    <script src="effects.js?v=2"></script>
+    <script src="writing.js?v=6"></script>
+    <script src="stages.js?v=3"></script>
+    <script src="game.js?v=3"></script>
+    <script src="demo.js?v=2"></script>
+</body>
+
+</html>

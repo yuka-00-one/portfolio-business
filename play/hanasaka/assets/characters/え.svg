@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 700 700">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #b59e7f;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 39px;
+      }
+
+      .cls-2 {
+        display: none;
+        font-family: PUDShinMGoPr6N-DeBold-90ms-RKSJ-H, 'A P-OTF UD ShinMaruGo Pr6N';
+        font-size: 551.5px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.10, SVG Export Plug-In . SVG Version: 1.2.0 Build 236)  -->
+  <g>
+    <g id="_レイヤー_1" data-name="レイヤー_1">
+      <text class="cls-2" transform="translate(71.3 556.2)"><tspan x="0" y="0">え</tspan></text>
+      <g>
+        <path class="cls-1" d="M241.5,135.4c69,21.9,199,29.9,199,29.9"/>
+        <path class="cls-1" d="M188.5,274.3s214-8,260-32c-85,85-304,313-304,313,0,0,135.2-131.5,175.4-156.5s78.6,4.5,70.6,61.5-15,103.6,42,104.3,123-8.3,123-8.3"/>
+      </g>
+    </g>
+  </g>
+</svg>
